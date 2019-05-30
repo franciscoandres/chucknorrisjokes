@@ -7,11 +7,11 @@ const endpoints = {
 const categoriesContainer = document.querySelector('.categories');
 const jokeContainer = document.querySelector('.joke');
 
-async function htmlJoke (joke) {
+const htmlJoke = joke => {
   jokeContainer.textContent = joke.value;
 }
 
-async function handleClass (event) {
+const handleClass = event => {
   event.preventDefault();
   document.querySelectorAll('.categories > li').forEach((category) => {
     if (category.classList.contains('selected')) {
@@ -21,46 +21,41 @@ async function handleClass (event) {
   event.target.classList.add('selected');
 };
 
-async function handleJokeByCategory (category) {
+const handleJokeByCategory = category => {
   return fetch(`https://api.chucknorris.io/jokes/random?category=${category}`)
     .then(response => response.json())
     .then(response => htmlJoke(response));
 }
 
-async function handleCategory (event) {
-  handleJokeByCategory(event.target.textContent);
-}
+const handleCategory = event => handleJokeByCategory(event.target.textContent);
 
-async function handleClick (event) {
+const handleClick = event => {
   event.preventDefault();
   handleClass(event);
   handleCategory(event);
 };
 
-async function htmlCategories (categories) {
+const htmlCategories = categories =>
   categories.forEach(category => {
     const listItem = document.createElement('li');
     listItem.textContent = category;
     listItem.onclick = handleClick;
     categoriesContainer.appendChild(listItem);
   });
-}
 
-async function categories () {
-  return fetch('https://api.chucknorris.io/jokes/categories')
+const categories = () =>
+  fetch('https://api.chucknorris.io/jokes/categories')
     .then(response => response.json())
     .then(response => htmlCategories(response))
     .catch(error => console.log(error));
-}
 
-async function joke () {
-  return fetch('https://api.chucknorris.io/jokes/random')
+const joke = () => 
+  fetch('https://api.chucknorris.io/jokes/random')
     .then(response => response.json())
     .then(response => htmlJoke(response))
     .catch(error => console.log(error));
-}
 
-async function run () {
+const run = () => {
   joke();
   categories();
 }
